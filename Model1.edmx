@@ -1,0 +1,207 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="empresataxisModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="conductores">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="nvarchar" MaxLength="50" />
+          <Property Name="Telefono" Type="nvarchar" MaxLength="15" />
+          <Property Name="placa_id" Type="bigint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="propietarios">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="nvarchar" MaxLength="50" />
+          <Property Name="Apellidos" Type="nvarchar" MaxLength="50" />
+          <Property Name="Telefono" Type="nvarchar" MaxLength="15" />
+        </EntityType>
+        <EntityType Name="taxis">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Modelo" Type="nvarchar" MaxLength="50" />
+          <Property Name="Marca" Type="nvarchar" MaxLength="50" />
+          <Property Name="Telefono" Type="nvarchar" MaxLength="15" />
+          <Property Name="propietarios_id" Type="bigint" Nullable="false" />
+        </EntityType>
+        <Association Name="conductores_placa_id_foreign">
+          <End Role="taxis" Type="Self.taxis" Multiplicity="1" />
+          <End Role="conductores" Type="Self.conductores" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="taxis">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="conductores">
+              <PropertyRef Name="placa_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="taxis_propietarios_id_foreign">
+          <End Role="propietarios" Type="Self.propietarios" Multiplicity="1" />
+          <End Role="taxis" Type="Self.taxis" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="propietarios">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="taxis">
+              <PropertyRef Name="propietarios_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="empresataxisModelStoreContainer">
+          <EntitySet Name="conductores" EntityType="Self.conductores" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="propietarios" EntityType="Self.propietarios" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="taxis" EntityType="Self.taxis" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="conductores_placa_id_foreign" Association="Self.conductores_placa_id_foreign">
+            <End Role="taxis" EntitySet="taxis" />
+            <End Role="conductores" EntitySet="conductores" />
+          </AssociationSet>
+          <AssociationSet Name="taxis_propietarios_id_foreign" Association="Self.taxis_propietarios_id_foreign">
+            <End Role="propietarios" EntitySet="propietarios" />
+            <End Role="taxis" EntitySet="taxis" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="empresataxisModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="conductores">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Telefono" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="placa_id" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="taxis" Relationship="Self.conductores_placa_id_foreign" FromRole="conductores" ToRole="taxis" />
+        </EntityType>
+        <EntityType Name="propietarios">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Apellidos" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Telefono" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="taxis" Relationship="Self.taxis_propietarios_id_foreign" FromRole="propietarios" ToRole="taxis" />
+        </EntityType>
+        <EntityType Name="taxis">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Modelo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Marca" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Telefono" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="propietarios_id" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="conductores" Relationship="Self.conductores_placa_id_foreign" FromRole="taxis" ToRole="conductores" />
+          <NavigationProperty Name="propietarios" Relationship="Self.taxis_propietarios_id_foreign" FromRole="taxis" ToRole="propietarios" />
+        </EntityType>
+        <Association Name="conductores_placa_id_foreign">
+          <End Role="taxis" Type="Self.taxis" Multiplicity="1" />
+          <End Role="conductores" Type="Self.conductores" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="taxis">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="conductores">
+              <PropertyRef Name="placa_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="taxis_propietarios_id_foreign">
+          <End Role="propietarios" Type="Self.propietarios" Multiplicity="1" />
+          <End Role="taxis" Type="Self.taxis" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="propietarios">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="taxis">
+              <PropertyRef Name="propietarios_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="empresataxisEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="conductores" EntityType="Self.conductores" />
+          <EntitySet Name="propietarios" EntityType="Self.propietarios" />
+          <EntitySet Name="taxis" EntityType="Self.taxis" />
+          <AssociationSet Name="conductores_placa_id_foreign" Association="Self.conductores_placa_id_foreign">
+            <End Role="taxis" EntitySet="taxis" />
+            <End Role="conductores" EntitySet="conductores" />
+          </AssociationSet>
+          <AssociationSet Name="taxis_propietarios_id_foreign" Association="Self.taxis_propietarios_id_foreign">
+            <End Role="propietarios" EntitySet="propietarios" />
+            <End Role="taxis" EntitySet="taxis" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="empresataxisModelStoreContainer" CdmEntityContainer="empresataxisEntities">
+          <EntitySetMapping Name="conductores">
+            <EntityTypeMapping TypeName="empresataxisModel.conductores">
+              <MappingFragment StoreEntitySet="conductores">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+                <ScalarProperty Name="placa_id" ColumnName="placa_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="propietarios">
+            <EntityTypeMapping TypeName="empresataxisModel.propietarios">
+              <MappingFragment StoreEntitySet="propietarios">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Apellidos" ColumnName="Apellidos" />
+                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="taxis">
+            <EntityTypeMapping TypeName="empresataxisModel.taxis">
+              <MappingFragment StoreEntitySet="taxis">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="Modelo" ColumnName="Modelo" />
+                <ScalarProperty Name="Marca" ColumnName="Marca" />
+                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+                <ScalarProperty Name="propietarios_id" ColumnName="propietarios_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
